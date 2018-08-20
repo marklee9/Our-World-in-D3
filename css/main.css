@@ -1,0 +1,10 @@
+.row {
+  margin: 0 auto;
+  border: 1px solid black;
+  text-align: center;
+}
+
+.row div svg {
+  border: 1px solid black;
+  margin: 0 auto;
+}
