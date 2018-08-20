@@ -1,31 +1,16 @@
+/*
+*    main.js
+*    Mastering Data Visualization with D3.js
+*    Project 2 - Gapminder Clone
+*/
 
-// let data = [10, 20, 30, 40, 50, 60, 70];
+let margin = {left: 100, right: 10, top: 10, bottom: 100};
+let width = 600 - margin.left - margin.right;
+let height = 400 - margin.top - margin.bottom; 
 
-//Loading external data.
-
-// This then promise is useful when you want to manipulate the data.
-let svg = d3.select('#chart-area')
-  .append("svg")
-    .attr("width", "500")
-    .attr("height", "500");
-
-d3.json("data/buildings.json").then((data) => {
-  
-  data.forEach(d => {
-    d.height = Number(d.height);
-  });
-
-  let y = d3.scaleLinear()
-    .domain([0, 828])
-    .range([0,400]);
-
-  let rect = svg.selectAll("rect")
-    .data(data)
-      .enter()
-      .append("rect")
-      .attr("y", 20);
-// This will show you the error what went wrong.
-}).catch((error) => {
-  console.log(error);
-});
-
+let svg = d3.select("#chart-area")
+	.append("svg")
+		.attr("width", width + margin.left + margin.right)
+d3.json("data/data.json").then(function(data){
+	console.log(data);
+})
