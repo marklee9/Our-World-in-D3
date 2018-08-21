@@ -1,10 +1,25 @@
 .row {
   margin: 0 auto;
-  border: 1px solid black;
+  height: 200vh;
   text-align: center;
+  min-width: 800px;
+  font-family: 'Fira Sans', sans-serif;
+}
+
+.row div {
+  height: 80vh;
 }
 
 .row div svg {
-  border: 1px solid black;
   margin: 0 auto;
+}
+
+.quote-div {
+  width: 75%;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 50px;
+  color: rgb(202, 202, 202);
 }
