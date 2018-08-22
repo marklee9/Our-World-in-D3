@@ -17,4 +17,11 @@ let pieChart = d3.select("#pie-chart-area").append("svg")
     .attr("background-color", "pink")
     .attr("transform", "translate(400, 400)");
 
-d3.json("data/data.json").then((data) => { });
+const type = (d) => {
+  d.population = Number(d.population);
+  return d;
+};
+
+d3.json("data/data.json", type).then((data) => { 
+  console.log(data);
+ });
