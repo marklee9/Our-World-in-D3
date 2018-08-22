@@ -78,29 +78,22 @@ let pastelColor = d3.scaleOrdinal(d3.schemePastel1);
 
 // Legend
 let legend = svg.append("g")
-	.attr("transform", 
-		"translate(" + (width - 10) + "," + (height - 500) + ")");
-
-let continents = ["europe", "asia", "america", "africa"
-];
-
+	.attr("transform", "translate(" + (width - 10) + "," + (height - 500) + ")");
+let continents = ["europe", "asia", "america", "africa"];
 continents.forEach((continent, i) => {
 	let row = legend.append("g")
 		.attr("transform", "translate(0, " + (i * 20) + ")");
-
 	row.append("rect")
 		.attr("border-radius", "50%")
 		.attr("width", 10)
 		.attr("height", 10)
 		.attr("fill", pastelColor(continent));
-
 	row.append("text")
 		.attr("x", -10)
 		.attr("y", 10)
 		.attr("text-anchor", "end")
 		.text(continent);
 });
-
 
 d3.json("data/data.json").then((data) => {
 	let mappedData = data.map((byYear) => {
