@@ -1,6 +1,7 @@
-width = 800;
-height = 800;
-let radius = 400;
+const pieChart = () => {
+  let width = 800;
+  let height = 800;
+  let radius = 400;
 
 let arc = d3.arc()
   .outerRadius(radius)
@@ -13,10 +14,9 @@ let pie = d3.pie()
   .sort(null);
 
 let pieChart = d3.select("#pie-chart-area").append("svg")
-  .attr("width", width)
-  .attr("height", height)
+    .attr("width", width)
+    .attr("height", height)
   .append("g")
-    .attr("background-color", "pink")
     .attr("transform", "translate(400, 400)");
 
 const type = (d) => {
@@ -26,24 +26,26 @@ const type = (d) => {
 
 let color = d3.scaleOrdinal(d3.schemePastel1);
 
-d3.json("data/main-data.json", type).then((data) => { 
-  updatePie(data[0].byContinents);
+d3.json("data/main-data.json", type).then((data) => {
+  data[0].byContinents.forEach((datum)=> 
+   updatePie(datum)
+  );
 });
 
 
-const updatePie = (data) => {
-  data.forEach((datum) => {
+const updatePie = (datum) => {
     // Joining Data
-    let path = pieChart.selectAll("path")
+    let path = pieChart.selectAll(".path")
       .data(pie(datum.population));
-  
-    // Delete old data
-    path.exit().remove();
-  
+
+  	path.exit().remove();
+
     // Enter new data
     path.enter().append("path")
       .attr("class", "path")
       .attr("fill", (d) => color(d))
       .attr("d", arc);
-  });
+  };
 };
+
+pieChart();
