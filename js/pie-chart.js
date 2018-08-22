@@ -16,7 +16,11 @@ const pieChart = () => {
       return d;
     });
 
-    console.log(firstData);
+    let pie = d3.pie()
+      .sort(null)
+      .value(d => d.population)(firstData);
+
+    console.log(pie);
 
   });
   
