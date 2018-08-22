@@ -27,16 +27,23 @@ const type = (d) => {
 let color = d3.scaleOrdinal(d3.schemePastel1);
 
 d3.json("data/main-data.json", type).then((data) => { 
-  // Joining Data
-  let path = pieChart.selectAll("path")
-    .data(pie(data[0]));
+  updatePie(data[0].byContinents);
+});
 
-  // Delete old data
-  path.exit().remove();  
 
-  // Enter new data
-  path.enter().append("path")
-    .attr("class", "path")
-    .attr("fill", (d) => color(d))
-    .attr("d", arc);
- });
+const updatePie = (data) => {
+  data.forEach((datum) => {
+    // Joining Data
+    let path = pieChart.selectAll("path")
+      .data(pie(datum.population));
+  
+    // Delete old data
+    path.exit().remove();
+  
+    // Enter new data
+    path.enter().append("path")
+      .attr("class", "path")
+      .attr("fill", (d) => color(d))
+      .attr("d", arc);
+  });
+};

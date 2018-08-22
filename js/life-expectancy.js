@@ -74,7 +74,8 @@ let year = svg.append("text")
 let time = 0;
 
 // Color
-let pastelColor = d3.scaleOrdinal(d3.schemePastel1);
+let pastelColor1 = d3.scaleOrdinal(d3.schemePastel1);
+let pastelColor2 = d3.scaleOrdinal(d3.schemePastel1);
 
 // Legend
 let legend = svg.append("g")
@@ -87,7 +88,7 @@ continents.forEach((continent, i) => {
 		.attr("border-radius", "50%")
 		.attr("width", 10)
 		.attr("height", 10)
-		.attr("fill", pastelColor(continent));
+		.attr("fill", (d) => pastelColor2(continent));
 	row.append("text")
 		.attr("x", -10)
 		.attr("y", 10)
@@ -102,13 +103,13 @@ d3.json("data/data.json").then((data) => {
 
 	d3.interval(() => {
 		time = (time < 214) ? time + 1 : 0;
-		update(mappedData[time]);
+		updateDots(mappedData[time]);
 	}, 200);
 
-	update(mappedData[0]);
+	updateDots(mappedData[0]);
 });
 
-const update = (data) => {
+const updateDots = (data) => {
 	// Joining Data
 	let dots = svg.selectAll("circle")
 	.data(data, (d) => d.country);
@@ -122,7 +123,7 @@ const update = (data) => {
 	// Enter
 	dots.enter()
 		.append("circle")
-			.attr("fill", (d) => pastelColor(d.continent))
+			.attr("fill", (d) => pastelColor1(d.continent))
 			.merge(dots)
 			.transition(t)
 				.attr("cy", (d) => y(d.life_exp))
