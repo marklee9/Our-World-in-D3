@@ -4,7 +4,9 @@ let radius = 400;
 
 let arc = d3.arc()
   .outerRadius(radius)
-  .innerRadius(100);
+  .innerRadius(100)
+  .startAngle(0)
+  .endAngle(Math.PI / 2);
 
 let pie = d3.pie()
   .value(d => d.population)
@@ -22,6 +24,19 @@ const type = (d) => {
   return d;
 };
 
-d3.json("data/data.json", type).then((data) => { 
-  console.log(data);
+let color = d3.scaleOrdinal(d3.schemePastel1);
+
+d3.json("data/main-data.json", type).then((data) => { 
+  // Joining Data
+  let path = pieChart.selectAll("path")
+    .data(pie(data[0]));
+
+  // Delete old data
+  path.exit().remove();  
+
+  // Enter new data
+  path.enter().append("path")
+    .attr("class", "path")
+    .attr("fill", (d) => color(d))
+    .attr("d", arc);
  });
