@@ -7,23 +7,38 @@ const pieChart = () => {
   let chart = d3.select("#pie-chart-area")
     .append("svg")
       .attr("width", width)
-      .attr("height", height)
-      .style("background", "pink");
+      .attr("height", height);
 
   d3.json("data/main-data.json").then((data) => {
-    let firstData = data[0].byContinents.map((d)=> {
+    let dataOfInterest = data[0].byContinents.map((d)=> {
       d.population = Number(d.population);
       return d;
     });
 
+    update(dataOfInterest);
+  });
+
+  const update = (data) => {
     let pie = d3.pie()
       .sort(null)
-      .value(d => d.population)(firstData);
-
-    console.log(pie);
-
-  });
+      .value(d => d.population)(data );
   
+    let arcs = d3.arc()
+      .innerRadius(100)
+      .outerRadius(300)
+      .padAngle(0.1)
+      .padRadius(50)
+      .cornerRadius(20);
+  
+    let sections = chart.append("g")
+      .attr("transform", "translate(400, 400)")
+      .selectAll("path")
+      .data(pie);
+  
+    sections.enter().append("path")
+      .attr("d", (d) => arcs(d))
+      .attr("fill", (d) => color(d.data.continent));
+  };
 };
 
 pieChart();

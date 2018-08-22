@@ -81,7 +81,8 @@ const lifeExpectancy = () => {
 	// Legend
 	let legend = svg.append("g")
 		.attr("transform", "translate(" + (width - 10) + "," + (height - 500) + ")");
-	let continents = ["europe", "asia", "america", "africa"];
+	let continents = ["asia", "africa", "europe", "americas"];
+
 	continents.forEach((continent, i) => {
 		let row = legend.append("g")
 			.attr("transform", "translate(0, " + (i * 20) + ")");
@@ -94,7 +95,8 @@ const lifeExpectancy = () => {
 			.attr("x", -10)
 			.attr("y", 10)
 			.attr("text-anchor", "end")
-			.text(continent);
+			.text(continent)
+			.style("text-transform", "capitalize");
 	});
 
 	d3.json("data/data.json").then((data) => {
