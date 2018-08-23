@@ -11,6 +11,17 @@ const pieChart = () => {
       .attr("width", width)
       .attr("height", height);
 
+  // adding tooltip
+  let tooltip = d3.select("#pie-chart-area")
+    .append("div")
+      .classed("tooltip", true);
+  tooltip.append("div")
+    .classed("continent", true);
+  tooltip.append("div")
+    .classed("population", true);
+  tooltip.append("div")
+    .classed("percentage", true);
+
 // Fetching the data.
 d3.json("data/main-data.json").then((data) => {
   d3.selectAll("input[type=checkbox]")
@@ -48,6 +59,7 @@ const change = (data) => {
 };
 
 const update = (data) => {
+  // defining constants.
   let pie = d3.pie()
     .sort(null)
     .value(d => d.population)(data);
@@ -75,20 +87,43 @@ const update = (data) => {
 
       chart.selectAll("path").remove();
   
-      sections.enter().append("path")
+      let section = sections.enter().append("path")
         .attr("d", (d) => arcs(d))
         .attr("fill", (d) => color(d.data.continent))
-        .on("mouseover", function(d){
-          d3.select(this)
-            .transition()
-            .duration(200)
-            .attr("d", (d2) => arcHover(d2));})
-        .on("mouseleave", function(d){
-          d3.select(this)
-            .transition()
-            .duration(200)
-            .attr("d", (d2) => arcs(d2));
-        });
+        .on("mouseover", mouseOver)
+        .on("mouseleave", mouseLeave);
+
+      console.log(data);
+
+      function mouseOver(d) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("d", (d2) => arcHover(d2));
+        tooltip.attr("hidden", null);
+        tooltip.select('.continent')
+          .append("text")
+          .text(console.log(d));
+      }
+
+      function mouseLeave() {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("d", (d2) => arcs(d2));
+        tooltip.attr("hidden", true);
+      }
+    
+    // Displaying texts'
+    // let text = d3.select("g").selectAll("text").data(pie);
+
+    // text.enter().append("text")
+    //     .each(function(d,i){
+    //       d3.select(this)
+    //         .classed("center-text" + String(i), true)
+    //         .attr("text-anchor", "middle")
+    //         .text((d2) => d2.data.continent);
+    //     });
 
     // Legends
     let legends = chart.append("g")

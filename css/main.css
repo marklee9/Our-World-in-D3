@@ -10,6 +10,28 @@
   height: 800px;
 }
 
+.row div .tooltip {
+  position: absolute;
+  top: 340px;
+  left: 527px;
+  right: 0px;
+  bottom: 0px;
+  width: 175px;
+  height: 175px;
+  border: 4px solid rgb(219, 219, 219);
+  border-radius: 50%;
+  align-content: center;
+}
+
+.row div .tooltip .continent {
+  margin-top: 45px;
+}
+
+.row div .tooltip div {
+  margin-top: 4px;
+  height: 30px;
+}
+
 .row div svg {
   margin: 0 auto;
 }
