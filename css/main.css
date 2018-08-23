@@ -23,3 +23,12 @@ h1 {
   font-size: 50px;
   color: rgb(202, 202, 202);
 }
+
+form label {
+  padding: 0 10px;
+}
+
+input[type='checkbox'] {
+  height: 16px;
+  width: 25px;
+}

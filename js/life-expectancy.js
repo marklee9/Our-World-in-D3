@@ -15,7 +15,7 @@ const lifeExpectancy = () => {
 		.domain([500, 15000000000])
 		.range([0, width])
 		.base(10);
-
+		
 	// Y scale
 	let y = d3.scaleLinear()
 		.domain([0, 90])

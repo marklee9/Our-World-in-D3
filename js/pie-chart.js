@@ -11,55 +11,79 @@ const pieChart = () => {
       .attr("width", width)
       .attr("height", height);
 
+// Fetching the data.
 d3.json("data/main-data.json").then((data) => {
-  let dataOfInterest = data[0].byContinents.map((d)=> {
-    d.population = Number(d.population);
+  d3.selectAll("input[type=checkbox]")
+    .on("click", (d) => change(data));
+
+  let dataOfInterest = data[0].byContinents.map((d) => {
+      d.population = Number(d.population);
     return d;
   });
 
-  // taking each data to invoke update function.
   update(dataOfInterest);
 });
 
+// User's input filters different outcome.
+const change = (data) => {
+  let userInput = [];
+  d3.selectAll("input[type=checkbox]")._groups.forEach((d) => {
+    d.forEach((d2) => {
+      if (d2.checked) {
+        userInput.push(d2.defaultValue);
+      }
+    });
+  });
+  let dataOfInterest= []; 
+    data[0].byContinents.forEach((d) => {
+    if (userInput.includes(d.continent)) {
+      dataOfInterest.push({
+        continent: d.continent,
+        population: Number(d.population)
+      });
+    }
+    return d;
+  });
+  update(dataOfInterest);
+};
 
+const update = (data) => {
+  let pie = d3.pie()
+    .sort(null)
+    .value(d => d.population)(data);
 
-  const update = (data) => {
-    let pie = d3.pie()
-      .sort(null)
-      .value(d => d.population)(data);
-  
     // Pie chart properties
     let arcs = d3.arc()
       .innerRadius(100)
       .outerRadius(300)
-      .padAngle(0.1)
+      .padAngle(0.2)
       .padRadius(50)
-      .cornerRadius(20);
+      .cornerRadius(30);
 
     // Hover effect on each slice
     let arcHover = d3.arc()
-        .innerRadius(280)
-        .outerRadius(400)
-        .padAngle(0.1)
-        .padRadius(50)
-        .cornerRadius(100);
+        .innerRadius(150)
+        .outerRadius(350)
+        .padAngle(0.05)
+        .cornerRadius(40);
   
     // Pie slice
     let sections = chart.append("g")
       .attr("transform", "translate(400, 400)")
       .selectAll("path")
       .data(pie);
+
+      chart.selectAll("path").remove();
   
       sections.enter().append("path")
         .attr("d", (d) => arcs(d))
         .attr("fill", (d) => color(d.data.continent))
         .on("mouseover", function(d){
-          console.log(d);
           d3.select(this)
             .transition()
             .duration(200)
             .attr("d", (d2) => arcHover(d2));})
-        .on("mouseleave", function(){
+        .on("mouseleave", function(d){
           d3.select(this)
             .transition()
             .duration(200)
@@ -71,7 +95,9 @@ d3.json("data/main-data.json").then((data) => {
       .attr("transform", "translate(750, 500)")
       .selectAll(".legends")
       .data(pie);
-    
+
+      chart.selectAll(".legends").remove();
+      
       let legend = legends.enter()
         .append("g")
         .classed("legends", true)
