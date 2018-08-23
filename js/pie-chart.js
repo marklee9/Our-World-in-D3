@@ -64,6 +64,13 @@ const update = (data) => {
     .sort(null)
     .value(d => d.population)(data);
 
+  let totalPopulation = 0;
+    data.forEach((datum) => {
+      totalPopulation += datum.population;
+    });
+  
+  console.log(totalPopulation);
+
     // Pie chart properties
     let arcs = d3.arc()
       .innerRadius(100)
