@@ -59,17 +59,15 @@ const change = (data) => {
 };
 
 const update = (data) => {
-  // defining constants.
   let pie = d3.pie()
     .sort(null)
     .value(d => d.population)(data);
 
+  // Counting total population.
   let totalPopulation = 0;
     data.forEach((datum) => {
       totalPopulation += datum.population;
     });
-  
-  console.log(totalPopulation);
 
     // Pie chart properties
     let arcs = d3.arc()
@@ -81,7 +79,7 @@ const update = (data) => {
 
     // Hover effect on each slice
     let arcHover = d3.arc()
-        .innerRadius(150)
+        .innerRadius(155)
         .outerRadius(350)
         .padAngle(0.05)
         .cornerRadius(40);
@@ -100,8 +98,6 @@ const update = (data) => {
         .on("mouseover", mouseOver)
         .on("mouseleave", mouseLeave);
 
-      console.log(data);
-
       function mouseOver(d) {
         d3.select(this)
           .transition()
@@ -109,8 +105,12 @@ const update = (data) => {
           .attr("d", (d2) => arcHover(d2));
         tooltip.attr("hidden", null);
         tooltip.select('.continent')
-          .append("text")
-          .text(console.log(d));
+          .html(d.data.continent);
+        tooltip.select('.population')
+          .html(d.data.population.toLocaleString());
+        let percentage = Math.round(1000 * d.data.population / totalPopulation) / 10;
+        tooltip.select('.percentage')
+          .html(String(percentage) + " %");
       }
 
       function mouseLeave() {
@@ -120,21 +120,10 @@ const update = (data) => {
           .attr("d", (d2) => arcs(d2));
         tooltip.attr("hidden", true);
       }
-    
-    // Displaying texts'
-    // let text = d3.select("g").selectAll("text").data(pie);
-
-    // text.enter().append("text")
-    //     .each(function(d,i){
-    //       d3.select(this)
-    //         .classed("center-text" + String(i), true)
-    //         .attr("text-anchor", "middle")
-    //         .text((d2) => d2.data.continent);
-    //     });
 
     // Legends
     let legends = chart.append("g")
-      .attr("transform", "translate(750, 500)")
+      .attr("transform", "translate(780, 500)")
       .selectAll(".legends")
       .data(pie);
 
