@@ -21,7 +21,7 @@ const pieChart = () => {
   const update = (data) => {
     let pie = d3.pie()
       .sort(null)
-      .value(d => d.population)(data );
+      .value(d => d.population)(data);
   
     let arcs = d3.arc()
       .innerRadius(100)
@@ -38,6 +38,10 @@ const pieChart = () => {
     sections.enter().append("path")
       .attr("d", (d) => arcs(d))
       .attr("fill", (d) => color(d.data.continent));
+
+    let legends = chart.append("g")
+      .attr("transform", "translate(600, 600)")
+      .selectAll(".legends").data(pie);
   };
 };
 
