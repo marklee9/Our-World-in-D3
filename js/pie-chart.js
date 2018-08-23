@@ -26,7 +26,7 @@ const pieChart = () => {
       .sort(null)
       .value(d => d.population)(data);
   
-    // All Pie chart property
+    // Pie chart properties
     let arcs = d3.arc()
       .innerRadius(100)
       .outerRadius(300)
