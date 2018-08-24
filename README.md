@@ -1,82 +1,156 @@
-## Pets on Earth
+# Our World in D3
 
-### Background and Overview
+## Background and Overview
 Our World in D3 is a educational website that shows world demographics through data visualization. Using different visualization gives different perspective of same information and allows us to see hidden trends and relationships.
 
-### Functionality & MVP  
+## D3.js
 
-In Our World in D3, users will be able to:
+### Hover effects.
 
-- [ ] Click each category to zoom in
-- [ ] Click the center to zoom out
-- [ ] button to zoom out all the way
-- [ ] visualize the population size of each category
+![aug-24-2018 10-56-00](https://user-images.githubusercontent.com/39206890/44599902-9745e380-a78c-11e8-8dab-dd819391c14d.gif)
 
-### Wireframes
+Hover effect was added for each pie. Hovering over would make selected information bigger and reveals the center circle with selected pie's information.
 
-<img width="885" alt="screen shot 2018-08-19 at 4 59 32 pm" src="https://user-images.githubusercontent.com/39206890/44314777-525b2f00-a3d1-11e8-9deb-01ac6d8b855e.png">
+This was done by using giving entirely new properties of pie dimension with D3's mouseover and mouseleave effect.
 
-This app will consist of a single screen with the simulation canvas, click button on the bottom to zoom all the way out, and nav links to the Github and my LinkedIn. 
+```js
+function mouseOver(d) {
+// Selecting the element that mouse entered.
+  d3.select(this)
+    .transition()
+    .duration(300)
+    .attr("d", (d2) => arcHover(d2));
 
-The upper most layer will show general type of pets, such as dogs, cats, or birds. The inner most layer will consist of detailed information of the selected breed.
+//Giving new texts to tooltip divs.
+  tooltip.attr("hidden", null);
+  tooltip.select('.continent')
+    .html(d.data.continent);
+  tooltip.select('.population')
+    .html(d.data.population.toLocaleString());
+  let percentage = Math.round(1000 * d.data.population / totalPopulation) / 10;
+  tooltip.select('.percentage')
+    .html(String(percentage) + " %");
+}
 
-### Architecture and Technologies
+function mouseLeave() {
+// Reverting back the hovered effect and hiding the rendered tooltip.
+  d3.select(this)
+    .transition()
+    .duration(300)
+    .attr("d", (d2) => arcs(d2));
+  tooltip.attr("hidden", true);
+}
+```
 
-This project will be implemented with the following technologies:
+### Selecting countries of interest.
 
-- Vanilla JavaScript for overall structure and game logic,
-- D3 library to implement visual representation
-- Web Audio API for zoom in and zoom out sound generation.
+![aug-24-2018 10-56-33](https://user-images.githubusercontent.com/39206890/44600461-30c1c500-a78e-11e8-9465-259d49c99895.gif)
 
-There will be two scripts involved in this project:
+Users can select the countries they want to compare.
 
-`d3.js`: this script will handle the logic for creating the necessary DOM elements.
+The input tags were linked with a change function that filters all the checked inputs and filtering the incoming data by the input values.
 
-`audio.js`: this script will handle the audio logic and the creation of `AudioEvent`s based on users input.
+```js
+// Selcting all inputs and giving them click property that invokes change function.
+d3.selectAll("input[type=checkbox]")
+  .on("click", (d) => change(data));
 
-### Implementation Timeline
+const change = (data) => {
+  let userInput = [];
 
-**Over the weekend**:
-- [ ] Do D3 tutorial to understand basics of D3.
-- [ ] Finish readme.
+// Getting an array of what user selected.
+  d3.selectAll("input[type=checkbox]")._groups.forEach((d) => {
+    d.forEach((d2) => {
+      if (d2.checked) {
+        userInput.push(d2.defaultValue);
+      }
+    });
+  });
 
-**Day 1**: Learn D3 to implement some visual representation of all pets:
+// Using the array above to filter unnecessary data.
+  let dataOfInterest= []; 
+    data[0].byContinents.forEach((d) => {
+    if (userInput.includes(d.continent)) {
+      dataOfInterest.push({
+        continent: d.continent,
+        population: Number(d.population)
+      });
+    }
+    return d;
+  });
+// Invoke update function with the filtered data.
+  update(dataOfInterest);
+};
+```
 
-- [ ] Learn enough D3 to render some data in basic D3 chart.
-- [ ] Import relevent data of pets.
+### Time lapsing Data.
 
-**Day 2**: Continue learning D3 and how to implement visual. Be able to visually represent the population of each catergory. Goals for the day:
+![aug-24-2018 10-57-32](https://user-images.githubusercontent.com/39206890/44601119-551ea100-a790-11e8-911b-304b66f7b366.gif)
 
-- [ ] Continue learning D3.
-- [ ] Link the external data to the graph.
-- [ ] Implement more visualization of the graph.
-- [ ] Implement click zoom in and zoom out functionality.
-- [ ] Make sure the size of each slice represents the population.
-- [ ] Make sure all data is shown correctly.
+Rendering each data on a map was done by iterating through each data and invoking updateDots function in every iteration. The previously rendered data had to be removed before entering new data.
 
+```js
+// Fetching and iterating through the data.
+d3.json("data/data.json").then((data) => {
+  let mappedData = data.map((byYear) => {
+    return byYear["countries"].filter((d) => d.life_exp);
+  });
+// Fetching new data every 0.2 sec.
+  d3.interval(() => {
+    time = (time < 214) ? time + 1 : 0;
+    updateDots(mappedData[time]);
+  }, 200);
+  // updating 
+  updateDots(mappedData[0]);
+});
 
+const updateDots = (data) => {
+  // Joining Data
+  let dots = svg.selectAll("circle")
+  .data(data, (d) => d.country);
+  
+  // Delete old dots
+  dots.exit().remove();
+  
+  // transition time set to 0.2 sec
+  let t = d3.transition().duration(300);
+  
+  // Enter
+  dots.enter()
+    .append("circle")
+      .attr("fill", (d) => pastelColor1(d.continent))
+      .merge(dots)
+      .transition(t)
+      .attr("cy", (d) => y(d.life_exp))
+      .attr("cx", (d) => x(d.population))
+      .attr("r", "7px");	 
+};
+```
 
-**Day 3**: Visual implementation of zoom in and zoom out effect. Additional sound effect when zooming in or out. Goals for the day:
+### Circle size based on data.
 
-- [ ] Continue learning D3.
-- [ ] Build visual effects of zoom in and zoom out.
-- [ ] Add sound effects for zoom in and zoom out.
-- [ ] Make sure that starting, stopping, and resetting works.
-- [ ] Make sure zoom in and zoom out shows correct information.
+![aug-24-2018 10-57-17](https://user-images.githubusercontent.com/39206890/44601033-138df600-a790-11e8-9386-39f83a19b86e.gif)
 
+The size of the circle is represented by the population, so that the graph shows three different information at once. 
 
-**Day 4**: Add a button to zoom all the way out. Add more styling and visual effects, making it polished and professional. Goals for the day:
+By adding a simple line of code, the circle size was able to represent the population size of each country.
 
-- [ ] Continue learning D3.
-- [ ] Make sure 'zoom out all the way' button functions correctly.
-- [ ] Style professionally.
-- [ ] Make sure all data is shown correctly.
-- [ ] Finish the project.
+```js
+// The circle radius was calculated based on the population.
+  .attr("r", (d) => Math.sqrt(area(d.population) / Math.PI));
 
-### Bonus features
+```
 
-There are many directions in which this project could evolve.
+## Project Design
 
-- [ ] Add more hierarchy.
-- [ ] Last layer of information will show other useful statistics of selected breed.
-- [ ] Add search bar.
+Our World in D3 was designed to render extensive data to a simple and interactive graph. Using different visualization gives different perspective of same information as well as reveal hidden relationships.
+
+## Technologies 
+
+D3.js was used to render the JSON file in HTML. CSS was used to style and position some of the components.
+
+## Future Features
+
+- Slider bar for two time lapse graph.
+- Zoom in feature for pie chart.
+
