@@ -8,47 +8,44 @@ const incomeChart = () => {
   let width = 800 - margin.left - margin.right;
   let height = 600 - margin.top - margin.bottom;
 
-  let svg = d3.select("#chart-area")
+  let svg = d3.select("#income-area")
     .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
     .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   // Adding mouse following tooltip
-  let tooltip = d3.select("#chart-area")
+  let tooltip = d3.select("#income-area")
     .append("div")
-    .classed("tooltip", true);
+    .classed("tooltip2", true);
   tooltip.append("div")
-    .classed("countryName", true);
+    .classed("countryName2", true);
   tooltip.append("div")
-    .classed("eachPopulation", true);
+    .classed("eachPopulation2", true);
   tooltip.append("div")
-    .classed("lifeExpectancy", true);
+    .classed("lifeExpectancy2", true);
 
-  // X scale
-  let x = d3.scaleLog()
-    .domain([500, 15000000000])
-    .range([0, width])
-    .base(10);
+	// X scale
+	let x = d3.scaleLog()
+	  .domain([100, 150000])
+	  .range([0, width])
+	  .base(10);
 
-  // Y scale
-  let y = d3.scaleLinear()
-    .domain([0, 90])
-    .range([height, 0]);
+	// Y scale
+	let y = d3.scaleLinear()
+	  .domain([0, 90])
+	  .range([height, 0]);
 
-  // X axis
-  let xAxis = d3.axisBottom(x)
-    .tickValues([1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, 1000000000])
-    .tickFormat((d) => {
-      if (d < 1000000) {
-        return String(d / 1000) + "k";
-      } else if (d < 1000000000) {
-        return String(d / 1000000) + " mil";
-      } else {
-        return String(d / 1000000000) + " bil";
-      }
-    });
+	// Area
+	let area = d3.scaleLinear()
+	  .range([20 * Math.PI, 1600 * Math.PI])
+	  .domain([500, 1500000000]);
+
+	// X axis
+	let xAxis = d3.axisBottom(x)
+	  .tickValues([10, 100, 1000, 10000, 100000])
+	  .tickFormat(d3.format("$"));
   svg.append("g")
     .attr("class", "bot-axis")
     .attr("transform", "translate(0 ," + height + ")")
@@ -68,7 +65,7 @@ const incomeChart = () => {
     .attr("x", width / 2 - 100)
     .attr("y", height + 50)
     .attr("font-size", "20px")
-    .text("Total Population");
+    .text("Average income per person (USD)");
 
   // Y Label
   let yLabel = svg.append("text")
@@ -97,7 +94,7 @@ const incomeChart = () => {
   // Legend
   let legend = svg.append("g")
     .attr("transform", "translate(" + (width - 10) + "," + (height - 500) + ")");
-  let continents = ["africa", "americas", "europe", "asia"];
+  let continents = ["africa", "americas", "asia", "europe"];
 
   continents.forEach((continent, i) => {
     let row = legend.append("g")
@@ -106,7 +103,7 @@ const incomeChart = () => {
       .attr("border-radius", "50%")
       .attr("width", 10)
       .attr("height", 10)
-      .attr("fill", (d) => pastelColor2(continent));
+      .attr("fill", () => pastelColor2(continent));
     row.append("text")
       .attr("x", -10)
       .attr("y", 10)
@@ -117,7 +114,7 @@ const incomeChart = () => {
 
   d3.json("data/data.json").then((data) => {
     let mappedData = data.map((byYear) => {
-      return byYear["countries"].filter((d) => d.life_exp);
+      return byYear["countries"].filter((d) => d.life_exp && d.income);
     });
 
     d3.interval(() => {
@@ -130,35 +127,35 @@ const incomeChart = () => {
 
   const updateDots = (data) => {
     // Joining Data
-    let dots = svg.selectAll("circle")
+    let circles = svg.selectAll("circle")
       .data(data, (d) => d.country);
 
     // Delete old dots
-    dots.exit().remove();
+    circles.exit().remove();
 
-    // transition time set to 0.2 sec
+    // transition time set to 0.3 sec
     let t = d3.transition().duration(300);
 
     // Enter
-    dots.enter()
+    circles.enter()
       .append("circle")
       .on("mouseover", mouseover)
       .on("mousemove", mousemove)
       .on("mouseleave", mouseleave)
       .attr("fill", (d) => pastelColor1(d.continent))
-      .merge(dots)
+      .merge(circles)
       .transition(t)
       .attr("cy", (d) => y(d.life_exp))
-      .attr("cx", (d) => x(d.population))
-      .attr("r", "7px");
+      .attr("cx", (d) => x(d.income))
+      .attr("r", (d) => Math.sqrt(area(d.population) / Math.PI));
 
     function mouseover(d) {
       tooltip.attr("hidden", null);
-      d3.select(".countryName")
+      d3.select(".countryName2")
         .html(d.country);
-      d3.select(".eachPopulation")
+      d3.select(".eachPopulation2")
         .html("P: " + d.population.toLocaleString());
-      d3.select(".lifeExpectancy")
+      d3.select(".lifeExpectancy2")
         .html("LE: " + d.life_exp);
     }
 

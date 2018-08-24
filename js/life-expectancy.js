@@ -3,7 +3,7 @@ const lifeExpectancy = () => {
 	let width = 800 - margin.left - margin.right;
 	let height = 600 - margin.top - margin.bottom; 
 
-	let svg = d3.select("#income-area")
+	let svg = d3.select("#chart-area")
 		.append("svg")
 			.attr("width", width + margin.left + margin.right)
 			.attr("height", height + margin.top + margin.bottom)
@@ -23,7 +23,7 @@ const lifeExpectancy = () => {
 		
 	// X scale
 	let x = d3.scaleLog()
-		.domain([500, 150000])
+		.domain([500, 15000000000])
 		.range([0, width])
 		.base(10);
 
@@ -34,7 +34,7 @@ const lifeExpectancy = () => {
 
 	// X axis
 	let xAxis = d3.axisBottom(x)
-		.tickValues([10, 100, 1000, 10000, 100000, 1000000])
+		.tickValues([1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, 1000000000])
 		.tickFormat((d) => {
 			if (d < 1000000) {
 				return String(d / 1000) + "k";
