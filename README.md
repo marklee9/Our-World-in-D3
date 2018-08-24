@@ -1,7 +1,8 @@
 # Our World in D3
 
 ## Background and Overview
-Our World in D3 is a educational website that shows world demographics through data visualization. Using different visualization gives different perspective of same information and allows us to see hidden trends and relationships.
+[Our World in D3](https://marklee9.github.io/Our-World-in-D3/)
+ is a educational website that shows world demographics through data visualization. Using different visualization gives different perspective of same information and allows us to see hidden trends and relationships.
 
 ## D3.js
 
