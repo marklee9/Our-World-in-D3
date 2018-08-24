@@ -25,6 +25,22 @@
   height: 800px;
 }
 
+.row .slider-div-one {
+  transform: rotate(90deg);
+}
+
+.row .slider-div-one .slider {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+}
+
+.row .slider-div-two .slider {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+}
+
 .row .title-div {
   height: 150px;
 }
