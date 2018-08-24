@@ -1,13 +1,11 @@
 ## Pets on Earth
 
 ### Background and Overview
-Pets on Earth is a interactive visualization of biodiversity created using D3. Pets on Earth will display the hierarchial partition layout of the popular pets in America and their relative population represented by the area of the column.
-
-Users can click each category to zoom in and click the center to zoom out.
+Our World in D3 is a educational website that shows world demographics through data visualization. Using different visualization gives different perspective of same information and allows us to see hidden trends and relationships.
 
 ### Functionality & MVP  
 
-In Pets on Earth, users will be able to:
+In Our World in D3, users will be able to:
 
 - [ ] Click each category to zoom in
 - [ ] Click the center to zoom out
