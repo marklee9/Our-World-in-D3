@@ -101,7 +101,7 @@ const update = (data) => {
       function mouseOver(d) {
         d3.select(this)
           .transition()
-          .duration(200)
+          .duration(300)
           .attr("d", (d2) => arcHover(d2));
         tooltip.attr("hidden", null);
         tooltip.select('.continent')
@@ -116,10 +116,11 @@ const update = (data) => {
       function mouseLeave() {
         d3.select(this)
           .transition()
-          .duration(200)
+          .duration(300)
           .attr("d", (d2) => arcs(d2));
         tooltip.attr("hidden", true);
       }
+
 
     // Legends
     let legends = chart.append("g")

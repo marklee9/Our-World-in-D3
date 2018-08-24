@@ -3,19 +3,30 @@ const lifeExpectancy = () => {
 	let width = 800 - margin.left - margin.right;
 	let height = 600 - margin.top - margin.bottom; 
 
-	let svg = d3.select("#chart-area")
+	let svg = d3.select("#income-area")
 		.append("svg")
 			.attr("width", width + margin.left + margin.right)
 			.attr("height", height + margin.top + margin.bottom)
 		.append("g")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+// Adding mouse following tooltip
+  let tooltip = d3.select("#chart-area")
+  	.append("div")
+  	.classed("tooltip", true);
+  tooltip.append("div")
+  	.classed("countryName", true);
+  tooltip.append("div")
+  	.classed("eachPopulation", true);
+  tooltip.append("div")
+		.classed("lifeExpectancy", true);
+		
 	// X scale
 	let x = d3.scaleLog()
-		.domain([500, 15000000000])
+		.domain([500, 150000])
 		.range([0, width])
 		.base(10);
-		
+
 	// Y scale
 	let y = d3.scaleLinear()
 		.domain([0, 90])
@@ -23,7 +34,7 @@ const lifeExpectancy = () => {
 
 	// X axis
 	let xAxis = d3.axisBottom(x)
-		.tickValues([1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, 1000000000])
+		.tickValues([10, 100, 1000, 10000, 100000, 1000000])
 		.tickFormat((d) => {
 			if (d < 1000000) {
 				return String(d / 1000) + "k";
@@ -81,7 +92,7 @@ const lifeExpectancy = () => {
 	// Legend
 	let legend = svg.append("g")
 		.attr("transform", "translate(" + (width - 10) + "," + (height - 500) + ")");
-	let continents = ["asia", "africa", "europe", "americas"];
+	let continents = ["africa", "americas", "europe", "asia"];
 
 	continents.forEach((continent, i) => {
 		let row = legend.append("g")
@@ -126,12 +137,35 @@ const lifeExpectancy = () => {
 		// Enter
 		dots.enter()
 			.append("circle")
+				.on("mouseover", mouseover)
+				.on("mousemove", mousemove)
+				.on("mouseleave", mouseleave)
 				.attr("fill", (d) => pastelColor1(d.continent))
 				.merge(dots)
 				.transition(t)
-					.attr("cy", (d) => y(d.life_exp))
-					.attr("cx", (d) => x(d.population))
-					.attr("r", "7px");
+				.attr("cy", (d) => y(d.life_exp))
+				.attr("cx", (d) => x(d.population))
+				.attr("r", "7px");
+
+		function mouseover(d) {
+			tooltip.attr("hidden", null); 
+				d3.select(".countryName")
+					.html(d.country);
+				d3.select(".eachPopulation")
+					.html("P: " + d.population.toLocaleString());
+				d3.select(".lifeExpectancy")
+					.html("LE: " + d.life_exp);
+		}
+
+		function mousemove(d) {
+			tooltip
+				.style("left", d3.event.pageX + "px")
+				.style("top", d3.event.pageY + "px");
+		}
+
+		function mouseleave() {
+			tooltip.attr("hidden", true);
+		}
 
 		year.text(time + 1803);
 	}; 	 
