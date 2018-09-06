@@ -46,13 +46,6 @@
 }
 
 .row #pie-chart-area .tooltip {
-  position: absolute;
-  top: 873px;
-  left: 527px;
-  right: 0px;
-  bottom: 0px;
-  width: 175px;
-  height: 175px;
   border: 4px solid rgb(219, 219, 219);
   border-radius: 50%;
   align-content: center;

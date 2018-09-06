@@ -12,9 +12,12 @@ const pieChart = () => {
       .attr("height", height);
 
   // adding tooltip
-  let tooltip = d3.select("#pie-chart-area")
-    .append("div")
-      .classed("tooltip", true);
+  let tooltip = chart
+      .append("g")
+      .classed("tooltip", true)
+      .attr("width", 175)
+      .attr("height", 175);
+      // .attr("transform", "translate(0, 0)");
   tooltip.append("div")
     .classed("continent", true);
   tooltip.append("div")
