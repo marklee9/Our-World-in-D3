@@ -12,12 +12,9 @@ const pieChart = () => {
       .attr("height", height);
 
   // adding tooltip
-  let tooltip = chart
-      .append("g")
-      .classed("tooltip", true)
-      .attr("width", 175)
-      .attr("height", 175);
-      // .attr("transform", "translate(0, 0)");
+  let tooltip = d3.select("#pie-chart-area")
+    .append("div")
+      .classed("tooltip", true);
   tooltip.append("div")
     .classed("continent", true);
   tooltip.append("div")
@@ -123,7 +120,6 @@ const update = (data) => {
           .attr("d", (d2) => arcs(d2));
         tooltip.attr("hidden", true);
       }
-
 
     // Legends
     let legends = chart.append("g")
