@@ -35,18 +35,6 @@
   height: 800px;
 }
 
-.row .slider-div {
-  position: relative;
-  bottom: 200px;
-  border: 3px solid black;
-}
-
-.row .slider-div-one .slider {
-  position: absolute;
-  left: 0px;
-  bottom: 0px;
-}
-
 .row .title-div {
   height: 150px;
 }
