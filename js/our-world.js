@@ -15,16 +15,33 @@ const ourWorld = () => {
 	d3.json("data/main-data.json").then((data) => {
 
     // constructing a data format to be used at d3.hierarchy
-    let asia = {}, africa = {}, europe = {}; 
-    let na = {}, sa = {}, oceania = {};
+    let asia = [], africa = [], europe = []; 
+    let na = [], sa = [], oceania = [];
 
-    console.log(data[1]["detail"]);
-    data[1]["detail"].forEach((d) => {
-      switch (d.continent) {
-        case "Asia":
-          asia["name"] = d.country;
-          asia["size"] = d.population;
+    data[1]["detail"].forEach(function(d) {
+      if (d.continent ===  "Asia") {
+        asia.push({name: d.country, size:d.population});
       }
+      if (d.continent ===  "Africa") {
+        africa.push({name: d.country, size:d.population});
+      }
+      if (d.continent ===  "Europe") {
+        europe.push({name: d.country, size:d.population});
+      }
+      if (d.continent ===  "North America") {
+        na.push({name: d.country, size:d.population});
+      }
+      if (d.continent === "South America") {      
+        sa.push({name: d.country, size:d.population});
+      }
+      if (d.continent === "Oceania") {      
+        oceania.push({name: d.country, size:d.population});
+      }
+
+    root = d3.hierarchy(root)
+      .sum(function(d) { return d.size; })
+      .sort(function(a, b) { return b.value - a.value; });
+
     });
   });
 
